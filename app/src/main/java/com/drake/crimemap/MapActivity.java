@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -147,22 +148,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             LatLng latLng = new LatLng(Double.parseDouble(row[1]), Double.parseDouble(row[2]));
             coordsList.add(latLng);
 
-//            Log.d(TAG, "row[3] " + row[3]);
-//            Log.d(TAG, "row[4] " + row[4]);
-
             int color;
             if(row[3].toLowerCase().contains("murder")) {
-                color = 0xff0000;
+                color = Color.argb(128, 255, 0, 0);
             } else if (row[3].toLowerCase().contains("theft")) {
-                color = 0xf6ff00;
+                color = Color.argb(128, 177, 183, 0);
             } else if (row[3].toLowerCase().contains("assault")) {
-                color = 0x00ddff;
+                color = Color.argb(128, 0, 221, 255);
             } else {
-                color = 0x000000;
+                color = Color.argb(128, 0, 0, 0);
             }
 
             if (i < 300) {
-                Utils.addCircle(mMap, latLng, 0);
+                Utils.addCircle(mMap, latLng, color);
                 Log.d(TAG, coordsList.get(i - 1).toString());
             }
         }

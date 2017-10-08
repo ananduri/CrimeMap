@@ -66,8 +66,8 @@ public class Utils {
                 .radius(150)
                 .strokeWidth(0)
 //                .strokeColor(Color.GREEN)
-                .fillColor(Color.argb(128, 255, 0, 0))
-//                        .fillColor(color)
+//                .fillColor(Color.argb(128, 255, 0, 0))
+                        .fillColor(color)
         );
     }
 
