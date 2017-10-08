@@ -1,6 +1,11 @@
 package com.drake.crimemap;
 
 
+import android.graphics.Color;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
@@ -54,4 +59,21 @@ public class Utils {
         return polylineOptions;
     }
 
+
+    public static void addCircle(GoogleMap map, LatLng latLng, int color) {
+        Circle circle = map.addCircle(new CircleOptions()
+                .center(latLng)
+                .radius(150)
+                .strokeWidth(0)
+//                .strokeColor(Color.GREEN)
+                .fillColor(Color.argb(128, 255, 0, 0))
+//                        .fillColor(color)
+        );
+    }
+
+    public static void addCircles(List<LatLng> coordsList, GoogleMap map) {
+        for (LatLng latLng : coordsList) {
+            addCircle(map, latLng, Color.GREEN);
+        }
+    }
 }

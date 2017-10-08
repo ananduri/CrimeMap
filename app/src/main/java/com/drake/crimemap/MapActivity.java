@@ -34,10 +34,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnPolylineClickListener, GoogleMap.OnMarkerDragListener {
+
+    private static final String TAG = "MapActivity";
 
     private final int MY_LOCATION_PERMISSION = 1;
 
@@ -122,19 +126,47 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 .title("Marker in Berkeley")
                 .draggable(true));
 
-//        Polyline polyline = mMap.addPolyline(new PolylineOptions().clickable(false)
-//                .add(
-//                        berkeley,
-//                        new LatLng(37.8, -122.27),
-//                        new LatLng(37.8, -122.2)
-//                ));
-//
-//        Utils.stylePolyline(polyline);
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(berkeley, 12));
 
         myLatLng = berkeley;
-//        getLocation();
+        Log.d(TAG, berkeley.toString());
+
+        //getLocation();
+
+        Utils.addCircle(mMap, berkeley, 0xfffff);
+
+        InputStream inputStream = getResources().openRawResource(R.raw.full_data_small);
+        CSVFile csvFile = new CSVFile(inputStream);
+        List<String[]> crimeList = csvFile.read();
+
+        List<LatLng> coordsList = new ArrayList<>();
+
+
+        for (int i = 1; i < crimeList.size(); i++) {
+            String[] row = crimeList.get(i);
+            LatLng latLng = new LatLng(Double.parseDouble(row[1]), Double.parseDouble(row[2]));
+            coordsList.add(latLng);
+
+//            Log.d(TAG, "row[3] " + row[3]);
+//            Log.d(TAG, "row[4] " + row[4]);
+
+            int color;
+            if(row[3].toLowerCase().contains("murder")) {
+                color = 0xff0000;
+            } else if (row[3].toLowerCase().contains("theft")) {
+                color = 0xf6ff00;
+            } else if (row[3].toLowerCase().contains("assault")) {
+                color = 0x00ddff;
+            } else {
+                color = 0x000000;
+            }
+
+            if (i < 300) {
+                Utils.addCircle(mMap, latLng, 0);
+                Log.d(TAG, coordsList.get(i - 1).toString());
+            }
+        }
+        Log.d(TAG, "berkeley: " + berkeley.toString());
     }
 
 
@@ -151,7 +183,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     public void onSuccess(Location location) {
                         if (location != null) {
                             myLocation = location;
-                            myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+//                            myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            myLatLng = new LatLng(37.87, -122.27); //for demo purposes, go to berkeley
 
                             if (!Geocoder.isPresent()) {
                                 Toast.makeText(MapActivity.this, "No Geocoder Available", Toast.LENGTH_SHORT).show();
@@ -178,13 +212,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             return;
         }
         myMarker.remove();
-        LatLng myLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+//        LatLng myLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
         myMarker = mMap.addMarker(new MarkerOptions()
                 .position(myLatLng)
                 .title("You are here")
                 .draggable(true));
         myMarker.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 12));
+
+//        if (currentRoute != null) {
+//            currentRoute.remove();
+//        }
     }
 
 
