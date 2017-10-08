@@ -166,6 +166,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                             //location is null, maybe GPS is turned off,
                             //could show dialog asking to turn on GPS
                             Log.d("MapActivity", "location is null");
+                            Toast.makeText(MapActivity.this, "couldn't get location, is GPS on?", Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -245,7 +246,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
-        final LatLng draggedLatLng = marker.getPosition();
+        draggedLatLng = marker.getPosition();
         Toast.makeText(this, "lat: " + draggedLatLng.latitude + "\nlng: " + draggedLatLng.longitude, Toast.LENGTH_SHORT).show();
 
         AlertDialog dialog = new AlertDialog.Builder(this)

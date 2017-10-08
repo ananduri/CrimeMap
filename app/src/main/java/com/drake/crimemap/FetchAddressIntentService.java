@@ -10,6 +10,7 @@ import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -97,6 +98,7 @@ public class FetchAddressIntentService extends IntentService {
             if (errorMessage.isEmpty()) {
                 errorMessage = "No address found";
                 Log.e(TAG, errorMessage);
+                Toast.makeText(this, "Address not found", Toast.LENGTH_SHORT).show();
             }
             deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage, null);
         } else {
